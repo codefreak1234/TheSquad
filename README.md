@@ -1,2 +1,2 @@
-# TheSquad
-The game we are currently working on.
+# TheSquad Information  
+Please watch the tutorial on our asana account to figure out how this all works!
