@@ -28,9 +28,7 @@ public class RailgunRaycast : MonoBehaviour
         gunLine = GetComponent<LineRenderer>();
         railgunAudio = GetComponent<AudioSource>();
         railgunCharge = GetComponent<ParticleSystem>();
-        //railgunShotSound = GetComponent<AudioClip>();
-        //railgunChargeSound = GetComponent<AudioClip>();
-
+        
 
     }
 
@@ -48,7 +46,7 @@ public class RailgunRaycast : MonoBehaviour
                 railgunAudio.Stop();
                 railgunAudio.Play();
             }
-            // Charge() ;
+            
         }
         else if (Input.GetButtonUp("Fire1") && playing)
         {
@@ -56,20 +54,6 @@ public class RailgunRaycast : MonoBehaviour
             railgunAudio.Stop();
             shoot();
         }
-
-        //if(Input.GetButton("Fire1") && timer >= timeBetweenBullets)
-        //{
-        //    railgunAudio.clip = railgunChargeSound;
-        //    railgunAudio.Stop();
-        //    railgunAudio.Play();
-        //}
-
-        //else if (Input.GetButtonUp("Fire1"))
-        //{
-        //    railgunAudio.Stop();
-        //    railgunCharge.Stop();
-        //    shoot();
-        //}
 
         if (timer >= timeBetweenBullets * effectsDisplayTime)
         {
