@@ -17,49 +17,45 @@ public class RailgunRaycast : MonoBehaviour
     private AudioSource railgunAudio;
     float effectsDisplayTime = 0.2f;
     ParticleSystem railgunCharge;
-   
+    private bool playing = false;
 
     // Use this for initialization
     void Awake()
     {
-        // shootableMask = LayerMask.GetMask("Shootable");
-        // gunLine = GetComponent<LineRenderer>();
+        shootableMask = LayerMask.GetMask("Shootable");
+        gunLine = GetComponent<LineRenderer>();
         railgunAudio = GetComponent<AudioSource>();
-        // railgunCharge = GetComponent<ParticleSystem>();
-        // railgunShotSound = GetComponent<AudioClip>();
-        // railgunChargeSound = GetComponent<AudioClip>();
-
+        railgunCharge = GetComponent<ParticleSystem>();
+        
 
     }
-    IEnumerator TurnFalse() {
-        playing = true ;
-        yield return new WaitForSeconds(3) ;
-        playing = false ;
-    }
-    public bool playing = false ;
+
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
-        
-        if(Input.GetButton("Fire1") && timer >= timeBetweenBullets) {
-            if(!playing){ 
-                playing = true ;
+        timer += Time.time;
+
+        if (Input.GetButton("Fire1") && timer >= timeBetweenBullets)
+        {
+            if (!playing)
+            {
+                playing = true;
                 railgunAudio.clip = railgunChargeSound;
-                railgunAudio.Stop() ;
+                railgunAudio.Stop();
                 railgunAudio.Play();
             }
-            // Charge() ;
+            
         }
-        else if (Input.GetButtonUp("Fire1") && playing) {
-            playing = false ;
+        else if (Input.GetButtonUp("Fire1") && playing)
+        {
+            playing = false;
             railgunAudio.Stop();
             shoot();
-        }    
+        }
 
-        if(timer >= timeBetweenBullets * effectsDisplayTime)
+        if (timer >= timeBetweenBullets * effectsDisplayTime)
         {
-            // DisableEffects();
+            DisableEffects();
         }
     }
 
@@ -73,30 +69,30 @@ public class RailgunRaycast : MonoBehaviour
         timer = 0f;
 
         railgunAudio.clip = railgunShotSound;
-        // gunLine.enabled = true;
+        gunLine.enabled = true;
         
         railgunAudio.Play();
-        // gunLine.SetPosition(0, transform.position);
+        gunLine.SetPosition(0, transform.position);
 
-        // shootRay.origin = transform.position;
-        // shootRay.direction = transform.right;
+        shootRay.origin = transform.position;
+        shootRay.direction = transform.right;
       
-        // if (Physics.Raycast(shootRay, out hit, shootableMask))
-        // {
+        if (Physics.Raycast(shootRay, out hit, shootableMask))
+        {
          
-        //     // EnemyHealth dmgscript = hit.collider.gameObject.GetComponent<EnemyHealth>();
-        //     // if(dmgscript != null)
+            EnemyHealth dmgscript = hit.collider.gameObject.GetComponent<EnemyHealth>();
+            if(dmgscript != null)
 
-        //     //     {
-        //     //         dmgscript.TakeDamage(damage, hit.point);
-        //     //     }
+                {
+                    dmgscript.TakeDamage(damage, hit.point);
+                }
 
-        //         gunLine.SetPosition(1, hit.point);
-        // }
+                gunLine.SetPosition(1, hit.point);
+        }
 
-        // else
-        // {
-        //     gunLine.SetPosition(1, shootRay.origin + shootRay.direction * range);
-        // }
+        else
+        {
+            gunLine.SetPosition(1, shootRay.origin + shootRay.direction * range);
+        }
     }
 }
