@@ -18,8 +18,6 @@ public class RailgunRaycast : MonoBehaviour
     float effectsDisplayTime = 0.2f;
     ParticleSystem railgunCharge;
     private bool playing = false;
-    
-   
 
     // Use this for initialization
     void Awake()
