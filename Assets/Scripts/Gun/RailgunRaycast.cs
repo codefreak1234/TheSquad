@@ -48,7 +48,7 @@ public class RailgunRaycast : MonoBehaviour
 
         }
 
-        timer += Time.time;
+        timer += Time.deltaTime;
 
         if (canFire && timer > timeBetweenBullets)
         {
