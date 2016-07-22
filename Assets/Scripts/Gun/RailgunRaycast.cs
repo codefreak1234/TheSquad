@@ -3,11 +3,13 @@ using System.Collections;
 
 public class RailgunRaycast : MonoBehaviour
 {
-    public float timeBetweenBullets;
+    public float timeBetweenBullets = 2.5f;
     public int damage = 10;
     public float range = 150;
+    public float reloadTime = 2.5f;
     public AudioClip railgunShotSound;
     public AudioClip railgunChargeSound;
+    public bool canFire;
 
     int shootableMask;
     float timer;
@@ -26,37 +28,58 @@ public class RailgunRaycast : MonoBehaviour
         gunLine = GetComponent<LineRenderer>();
         railgunAudio = GetComponent<AudioSource>();
         railgunCharge = GetComponent<ParticleSystem>();
-        
+      
 
     }
 
+    void Start()
+    {
+        canFire = true;
+    }
+   
     // Update is called once per frame
     void Update()
     {
+        if(ammoDisplay.ammo <= 0)
+        {
+            canFire = false;
+            StartCoroutine("Reload", reloadTime);
+            ammoDisplay.ammo = 10;
+
+        }
+
         timer += Time.time;
 
-        if (Input.GetButton("Fire1") && timer >= timeBetweenBullets)
+        if (canFire && timer > timeBetweenBullets)
         {
-            if (!playing)
-            {
-                playing = true;
-                railgunAudio.clip = railgunChargeSound;
-                railgunAudio.Stop();
-                railgunAudio.Play();
-            }
             
-        }
-        else if (Input.GetButtonUp("Fire1") && playing)
-        {
-            playing = false;
-            railgunAudio.Stop();
-            shoot();
+            if (Input.GetButton("Fire1") )
+            {
+
+                if (!playing)
+                {
+                    playing = true;
+                    railgunAudio.clip = railgunChargeSound;
+                    railgunAudio.Stop();
+                    railgunAudio.Play();
+                }
+
+            }
+            else if (Input.GetButtonUp("Fire1") && playing)
+            {
+                playing = false;
+                railgunAudio.Stop();
+                shoot();
+
+            }
+
         }
 
         if (timer >= timeBetweenBullets * effectsDisplayTime)
         {
             DisableEffects();
         }
+
     }
 
     public void DisableEffects()
@@ -72,6 +95,7 @@ public class RailgunRaycast : MonoBehaviour
         gunLine.enabled = true;
         
         railgunAudio.Play();
+        ammoDisplay.ammo -= 1;
         gunLine.SetPosition(0, transform.position);
 
         shootRay.origin = transform.position;
@@ -94,5 +118,11 @@ public class RailgunRaycast : MonoBehaviour
         {
             gunLine.SetPosition(1, shootRay.origin + shootRay.direction * range);
         }
+    }
+
+    IEnumerator Reload(float reloadTime)
+    {
+        yield return new WaitForSeconds(reloadTime);
+        canFire = true;
     }
 }
